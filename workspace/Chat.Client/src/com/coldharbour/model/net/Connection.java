@@ -2,9 +2,12 @@ package com.coldharbour.model.net;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Connection {
@@ -13,41 +16,57 @@ public class Connection {
 	private Socket socket;
 	private Scanner in;
 	private PrintWriter out;
+	private ObjectInputStream ois;
 
 	public Connection() {
 
 	}
 
-	public Socket open() {
-		try {
-			socket = new Socket(HOST, PORT);
-			in = new Scanner(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public Socket open() throws UnknownHostException, IOException {
+		socket = new Socket(HOST, PORT);
+		in = new Scanner(new InputStreamReader(socket.getInputStream()));
+		out = new PrintWriter(socket.getOutputStream());
+		ois = new ObjectInputStream(socket.getInputStream());
 		return socket;
 	}
 	
 	public void send(String message) {
-		out.println(message);
-		out.flush();
+		if (out != null) {
+			out.println(message);
+			out.flush();
+		}
 	}
 	
 	public String read() {
-		String msg = in.nextLine();
-		System.out.println(msg);
+		String msg = "";
+		if (in != null) {
+			msg = in.nextLine();
+		}
 		return msg;
 	}
 	
-	public void close() {
+	public List<String> readObject() {
+		Object o;
+		List<String> userList = null;
 		try {
-			out.close();
-			in.close();
-			socket.close();
-		} catch (IOException e) {
+			o = ois.readObject();
+			userList = (List<String>) o;
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return userList;
 	}
-
+	
+	public void close() {
+		if (out != null & in != null) {
+			try {
+				out.close();
+				in.close();
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

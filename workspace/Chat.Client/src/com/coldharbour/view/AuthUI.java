@@ -1,8 +1,13 @@
 package com.coldharbour.view;
 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -21,6 +26,7 @@ public class AuthUI {
 	final String title = "Auth";
 	private Display display;
 	private Shell shell;
+	private Label errorLabel;
 	private Text loginText;
 	private Text passwordText;
 	private IController controller;
@@ -43,6 +49,11 @@ public class AuthUI {
 		passwordLabel.setText("Password");
 		passwordLabel.setBounds(90, 130, 100, 20);
 		
+		errorLabel = new Label(shell, SWT.CENTER);
+		errorLabel.setText("");
+		errorLabel.setBounds(90, 260, 100, 30);
+		
+		
 		loginText = new Text(shell, SWT.SINGLE | SWT.BORDER | SWT.CENTER);
 		loginText.setBounds(90, 95, 100, 20);
 		
@@ -55,14 +66,14 @@ public class AuthUI {
 		
 		Link registerLink = new Link(shell, SWT.CENTER);
 		registerLink.setText("<a>Register</a>");
-		registerLink.setBounds(90, 230, 50, 320);
+		registerLink.setBounds(90, 230, 50, 30);
 		
 		Label separate = new Label(shell, SWT.SEPARATOR);
 		separate.setBounds(140, 230, 5 , 15);
 		
 		Link forgotLink = new Link(shell, SWT.CENTER);
 		forgotLink.setText("<a>Forgot?</a>");
-		forgotLink.setBounds(150, 230, 50, 320);
+		forgotLink.setBounds(150, 230, 50, 20);
 		
 		enterButton.addSelectionListener(new SelectionListener() {
 			@Override
@@ -112,8 +123,6 @@ public class AuthUI {
 				display.sleep();
 			}
 		}
-//		shell.close();
-//		display.dispose();
 	}
 	
 	public void dispose() {
@@ -126,14 +135,16 @@ public class AuthUI {
 		});
 	}
 	
-//	public String getLogin() {
-//		return loginText.getText();
-//	}
-//
-//	public String getPwd() {
-//		return passwordText.getText();
-//	}
-
+	public void showError(final String message) {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				errorLabel.setText(message);
+			}
+		});
+	}
+	
 	public User getUSer() {
 		User user = new User(loginText.getText(), passwordText.getText());
 		return user;

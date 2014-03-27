@@ -26,6 +26,7 @@ public class ChatUI implements Observer {
 	private Text userListWindow;
 	private Controller controller;
 	private List<String> listMsg = new ArrayList<>();
+	private List<String> userList = new ArrayList<>();
 
 	public ChatUI(Controller controller) {
 		super();
@@ -103,11 +104,6 @@ public class ChatUI implements Observer {
 			}
 		});
 		
-
-		
-
-		
-
 	}
 	
 	public String getMessage() {
@@ -136,6 +132,21 @@ public class ChatUI implements Observer {
 	public void dispose() {
 		shell.dispose();
 //		display.dispose();
+	}
+
+	@Override
+	public void updateUserList(final List<String> userLIst) {
+//		Display.getDefault().asyncExec(new Runnable() {
+//			public void run() {
+//				StringBuilder sb = new StringBuilder();
+//				
+//				for (String user : userLIst) {
+//					sb.append(user);
+//					sb.append("\r\n");
+//				}
+//				userListWindow.setText(sb.toString());
+//			}
+//		});
 	}
 
 }

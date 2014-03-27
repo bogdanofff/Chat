@@ -1,5 +1,9 @@
 package com.coldharbour.model;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+
 import org.eclipse.swt.widgets.Display;
 
 import com.coldharbour.controllers.Controller;
@@ -23,8 +27,19 @@ public class ChatModel implements IChatModel {
 
 	@Override
 	public void connect(User user) {
+		try {
 		connect = new Connection();
 		connect.open();
+		} catch (ConnectException e) {
+			controller.showError("Сервер не найден");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 		if (new Authentication(user, connect).authenticate()) {
 			this.user = user;
 			new Thread(new Runnable() {
@@ -38,8 +53,10 @@ public class ChatModel implements IChatModel {
 			}).start();
 //			controller.closeAuthUI();
 		}
-		else
+		else {
+			controller.showError("Не верный логин или пароль");
 			connect.close();
+		}
 	}
 
 	@Override

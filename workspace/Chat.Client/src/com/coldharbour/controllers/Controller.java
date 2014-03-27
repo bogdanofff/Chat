@@ -45,4 +45,8 @@ public class Controller implements IController {
 	public void closeAuthUI() {
 		auth.dispose();
 	}
+	
+	public void showError(String message) {
+		auth.showError(message);
+	}
 }

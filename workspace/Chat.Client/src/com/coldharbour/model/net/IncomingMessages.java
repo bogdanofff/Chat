@@ -17,7 +17,10 @@ public class IncomingMessages implements Subject, Runnable {
 	public void run() {
 		while(state) {
 			String msg = connect.read();
-			notifyObserver(msg);
+			if (msg.equals("UpdateUserList")) {
+			o.updateUserList(connect.readObject());	
+			} else 
+				notifyObserver(msg);
 		}
 	}
 
